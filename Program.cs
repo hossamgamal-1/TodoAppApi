@@ -4,7 +4,7 @@ using TodoAppApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//configure Identity
+// Configure Identity
 builder.Services.AddIdentity<AppUser,IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
