@@ -78,9 +78,8 @@ namespace TodoAppApi.Controllers
             if(todoTask.User.Id != user.Id)
                 return Unauthorized();
 
-            todoTask.Title = dto.Title.IsNullOrEmpty() ? todoTask.Title : dto.Title;
-            todoTask.Description = dto.Description.IsNullOrEmpty() ? todoTask.Description : dto.Description;
-
+            todoTask.Title = string.IsNullOrEmpty(dto.Title) ? todoTask.Title : dto.Title;
+            todoTask.Description = string.IsNullOrEmpty(dto.Description) ? todoTask.Description : dto.Description;
             await _context.SaveChangesAsync();
 
             return Ok(todoTask);
