@@ -23,8 +23,13 @@ public class AuthController(IAuthService authService) : AppController
     public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDto dto)
     {
         return await Handle(async () => {
-            var jwt = HttpContext.Request.Headers.Authorization.ToString().Split(" ").Last();
-            await _authService.ChangePasswordAsync(jwt,dto);
+            var authorizationHeader = HttpContext.Request.Headers.Authorization.ToString();
+            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized(new { message = "Invalid or missing Authorization header" });
+            }
+            var jwt = authorizationHeader.Substring("Bearer ".Length).Trim();
+            await _authService.ChangePasswordAsync(jwt, dto);
             return new { message = "Password changed successfully" };
         });
     }
