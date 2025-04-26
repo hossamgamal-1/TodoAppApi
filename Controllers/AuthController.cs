@@ -1,36 +1,32 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TodoAppApi.Dtos;
 using TodoAppApi.Helpers;
+using TodoAppApi.Models;
 using TodoAppApi.Services;
 
 namespace TodoAppApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController(IAuthService authService) : AppController
+public class AuthController(IAuthService authService,UserManager<AppUser> userManager) : AppController(userManager)
 {
     private readonly IAuthService _authService = authService;
 
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync(RegisterRequestDto dto) => await Handle(() => _authService.RegisterUserAsync(dto));
+    public async Task<ActionResult<AuthResponseDto>> RegisterAsync(RegisterRequestDto dto) => await Handle(() => _authService.RegisterUserAsync(dto));
 
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync(LoginRequestDto dto) => await Handle(() => _authService.LoginAsync(dto));
+    public async Task<ActionResult<AuthResponseDto>> LoginAsync(LoginRequestDto dto) => await Handle(() => _authService.LoginAsync(dto));
 
     [Authorize]
     [HttpPost("ChangePassword")]
-    public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDto dto)
+    public async Task<ActionResult<string>> ChangePasswordAsync(ChangePasswordDto dto)
     {
         return await Handle(async () => {
-            var authorizationHeader = HttpContext.Request.Headers.Authorization.ToString();
-            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
-            {
-                return Unauthorized(new { message = "Invalid or missing Authorization header" });
-            }
-            var jwt = authorizationHeader.Substring("Bearer ".Length).Trim();
-            await _authService.ChangePasswordAsync(jwt, dto);
-            return new { message = "Password changed successfully" };
+            await _authService.ChangePasswordAsync(GetToken(),dto);
+            return "Password changed successfully";
         });
     }
 }
