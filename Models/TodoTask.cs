@@ -8,6 +8,7 @@ public class TodoTask : TodoTaskDto
 {
     public int Id { get; set; }
 
+    [NotMapped]
     public bool IsCompleted => CompletedAt is not null;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
