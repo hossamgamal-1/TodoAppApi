@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TodoAppApi.Dtos;
 
@@ -9,4 +10,7 @@ public class TodoTaskDto
 
     [MaxLength(350)]
     public string Description { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public ICollection<int> TagIds { get; set; } = [];
 }

@@ -16,12 +16,15 @@ public class TodoTask : TodoTaskDto
     [JsonIgnore]
     public AppUser? User { get; set; }
 
+    public ICollection<Tag> Tags { get; set; } = [];
+
     public static TodoTask FromDto(TodoTaskDto dto,AppUser user)
     {
         return new TodoTask {
+            User = user,
             Title = dto.Title,
+            TagIds = dto.TagIds,
             Description = dto.Description,
-            User = user
         };
     }
 }
