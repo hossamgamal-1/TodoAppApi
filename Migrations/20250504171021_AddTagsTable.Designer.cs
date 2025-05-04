@@ -12,8 +12,8 @@ using TodoAppApi.Models;
 namespace TodoAppApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250502122529_Added Tags Table")]
-    partial class AddedTagsTable
+    [Migration("20250504171021_AddTagsTable")]
+    partial class AddTagsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,7 +256,7 @@ namespace TodoAppApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("title")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -284,10 +284,6 @@ namespace TodoAppApi.Migrations
                         .IsRequired()
                         .HasMaxLength(350)
                         .HasColumnType("nvarchar(350)");
-
-                    b.PrimitiveCollection<string>("TagIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()

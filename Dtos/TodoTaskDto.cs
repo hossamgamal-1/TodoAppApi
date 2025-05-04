@@ -11,6 +11,5 @@ public class TodoTaskDto
     [MaxLength(350)]
     public string Description { get; set; } = string.Empty;
 
-    [JsonIgnore]
     public ICollection<int> TagIds { get; set; } = [];
 }

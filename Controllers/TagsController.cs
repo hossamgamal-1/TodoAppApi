@@ -17,7 +17,7 @@ namespace TodoAppApi.Controllers
         private readonly ApplicationDbContext _context = context;
 
         [HttpGet]
-        public async Task<ActionResult<List<TodoTask>>> GetAll()
+        public async Task<ActionResult<List<Tag>>> GetAll()
         {
             var user = await GetUserByTokenAsync();
 
@@ -27,42 +27,22 @@ namespace TodoAppApi.Controllers
             return Ok(await _context.Tags.ToListAsync());
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<TodoTask>> PostTag(TodoTaskDto dto)
-        //{
-        //    AppUser? user = await GetUserByTokenAsync();
-        //    if(user is null)
-        //        return Unauthorized();
+        [HttpPost]
+        public async Task<ActionResult<Tag>> PostTag(TagDto dto)
+        {
+            AppUser? user = await GetUserByTokenAsync();
+            if(user is null)
+                return Unauthorized();
 
-        //    var todoTask = TodoTask.FromDto(dto,user);
+            var tag = new Tag {
+                Title = dto.Title,
+            };
 
-        //    _context.TodoTasks.Add(todoTask);
+            _context.Tags.Add(tag);
 
-        //    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        //    return Ok(todoTask);
-        //}
-
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTodoTask(int id)
-        //{
-        //    var user = await GetUserByTokenAsync();
-
-        //    if(user is null)
-        //        return Unauthorized();
-
-        //    var todoTask = await _context.TodoTasks.FindAsync(id);
-        //    if(todoTask == null || todoTask.User == null)
-        //        return NotFound();
-
-        //    if(todoTask.User.Id != user.Id)
-        //        return Unauthorized();
-
-        //    _context.TodoTasks.Remove(todoTask);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(todoTask);
-        //}
+            return Ok(tag);
+        }
     }
 }

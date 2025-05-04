@@ -5,7 +5,7 @@
 namespace TodoAppApi.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedTagsTable : Migration
+    public partial class AddTagsTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,20 +14,13 @@ namespace TodoAppApi.Migrations
                 name: "IsCompleted",
                 table: "TodoTasks");
 
-            migrationBuilder.AddColumn<string>(
-                name: "TagIds",
-                table: "TodoTasks",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "[]");
-
             migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,10 +65,6 @@ namespace TodoAppApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
-
-            migrationBuilder.DropColumn(
-                name: "TagIds",
-                table: "TodoTasks");
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsCompleted",

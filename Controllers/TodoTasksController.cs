@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using TodoAppApi.Dtos;
 using TodoAppApi.Helpers;
 using TodoAppApi.Models;
@@ -26,6 +25,7 @@ namespace TodoAppApi.Controllers
             var tasks = await _context.TodoTasks
                 .Where(t => t.User != null && t.User.Id == user.Id)
                 .OrderByDescending(t => t.CreatedAt)
+                .Include(t => t.Tags)
                 .ToListAsync();
 
             return Ok(tasks);
@@ -54,7 +54,23 @@ namespace TodoAppApi.Controllers
             if(user is null)
                 return Unauthorized();
 
-            var todoTask = TodoTask.FromDto(dto,user);
+            var tags = new List<Tag>();
+
+            foreach(int tagId in dto.TagIds)
+            {
+                Tag? tag = await _context.Tags.FindAsync(tagId);
+                if(tag is null)
+                    return NotFound($"Tag with id {tagId} not found");
+
+                tags.Add(tag);
+            }
+
+            var todoTask = new TodoTask {
+                Title = dto.Title,
+                Description = dto.Description,
+                User = user,
+                Tags = tags
+            };
 
             _context.TodoTasks.Add(todoTask);
 

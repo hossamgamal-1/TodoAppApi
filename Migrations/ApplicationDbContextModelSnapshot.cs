@@ -253,7 +253,7 @@ namespace TodoAppApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("title")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -281,10 +281,6 @@ namespace TodoAppApi.Migrations
                         .IsRequired()
                         .HasMaxLength(350)
                         .HasColumnType("nvarchar(350)");
-
-                    b.PrimitiveCollection<string>("TagIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
