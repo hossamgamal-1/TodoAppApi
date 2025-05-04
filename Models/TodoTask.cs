@@ -4,11 +4,17 @@ using TodoAppApi.Dtos;
 
 namespace TodoAppApi.Models;
 
-public class TodoTask : TodoTaskDto
+public class TodoTask
 {
     public int Id { get; set; }
 
     public bool IsCompleted => CompletedAt is not null;
+
+    [MaxLength(100)]
+    public string Title { get; set; } = string.Empty;
+
+    [MaxLength(350)]
+    public string Description { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? CompletedAt { get; set; }
@@ -16,12 +22,5 @@ public class TodoTask : TodoTaskDto
     [JsonIgnore]
     public AppUser? User { get; set; }
 
-    public static TodoTask FromDto(TodoTaskDto dto,AppUser user)
-    {
-        return new TodoTask {
-            Title = dto.Title,
-            Description = dto.Description,
-            User = user
-        };
-    }
+    public ICollection<Tag> Tags { get; set; } = [];
 }
